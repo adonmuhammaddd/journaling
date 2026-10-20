@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::get('/', function () {
     return auth()->check()
@@ -11,7 +11,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/calendar', fn () => Inertia::render('Calendar/Index'))->name('calendar');
+    Route::get('/calendar', [CalendarController::class, 'show'])->name('calendar');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
