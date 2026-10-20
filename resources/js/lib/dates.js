@@ -77,6 +77,11 @@ export function formatMonth(iso) {
     return `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
 }
 
+export function formatMonthShort(iso) {
+    const d = parse(iso);
+    return `${MONTHS[d.getUTCMonth()].slice(0, 3)} ${d.getUTCFullYear()}`;
+}
+
 export function formatTitle(view, iso) {
     if (view === 'day') return formatDayLong(iso);
     if (view === 'month') return formatMonth(iso);

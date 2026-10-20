@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addDays, dayOfWeek, eachDay, formatDayLong, formatTitle, isoWeek, rangeFor, shift } from './dates';
+import { addDays, dayOfWeek, eachDay, formatDayLong, formatMonthShort, formatTitle, isoWeek, rangeFor, shift } from './dates';
 
 describe('dates', () => {
     it('adds days across month and year boundaries', () => {
@@ -44,5 +44,10 @@ describe('dates', () => {
         expect(formatTitle('month', '2026-10-20')).toBe('Oktober 2026');
         expect(formatTitle('day', '2026-10-20')).toBe('Selasa, 20 Oktober 2026');
         expect(formatDayLong('2026-10-18')).toBe('Minggu, 18 Oktober 2026');
+    });
+
+    it('formats a short month for narrow screens', () => {
+        expect(formatMonthShort('2026-10-20')).toBe('Okt 2026');
+        expect(formatMonthShort('2026-08-01')).toBe('Agu 2026');
     });
 });
