@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { matchesFilter, parseStoredCategories } from './filter';
+import { enabledCategories, matchesFilter, parseHiddenCategories } from './filter';
 
 const entry = { title: 'Rapat tim', note: null, category: 'work' };
 
@@ -22,20 +22,27 @@ describe('matchesFilter', () => {
     });
 });
 
-describe('parseStoredCategories', () => {
+describe('parseHiddenCategories', () => {
     const all = ['work', 'meal'];
 
-    it('falls back to all categories for missing or broken storage', () => {
-        expect(parseStoredCategories(null, all)).toEqual(all);
-        expect(parseStoredCategories('{rusak', all)).toEqual(all);
-        expect(parseStoredCategories('"work"', all)).toEqual(all);
+    it('hides nothing for missing or broken storage', () => {
+        expect(parseHiddenCategories(null, all)).toEqual([]);
+        expect(parseHiddenCategories('{rusak', all)).toEqual([]);
+        expect(parseHiddenCategories('"work"', all)).toEqual([]);
     });
 
     it('drops unknown categories', () => {
-        expect(parseStoredCategories('["meal","gaming"]', all)).toEqual(['meal']);
+        expect(parseHiddenCategories('["meal","gaming"]', all)).toEqual(['meal']);
+        expect(parseHiddenCategories('["foo",1]', all)).toEqual([]);
+    });
+});
+
+describe('enabledCategories', () => {
+    it('shows every category that is not hidden, including ones added later', () => {
+        expect(enabledCategories(['meal'], ['work', 'meal', 'study'])).toEqual(['work', 'study']);
     });
 
-    it('keeps an intentionally empty selection', () => {
-        expect(parseStoredCategories('[]', all)).toEqual([]);
+    it('can hide everything on purpose', () => {
+        expect(enabledCategories(['work', 'meal'], ['work', 'meal'])).toEqual([]);
     });
 });

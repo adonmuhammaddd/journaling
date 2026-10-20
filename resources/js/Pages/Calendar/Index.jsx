@@ -9,7 +9,7 @@ import TopBar from '@/Components/Calendar/TopBar';
 import Toast from '@/Components/Toast';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import { eachDay, shift } from '@/lib/dates';
-import { matchesFilter, parseStoredCategories, STORAGE_KEY } from '@/lib/filter';
+import { enabledCategories, matchesFilter, parseHiddenCategories, STORAGE_KEY } from '@/lib/filter';
 import { addMinutes, fromMinutes, nowInJakarta, snap } from '@/lib/time';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useEffect, useMemo, useState } from 'react';
@@ -21,11 +21,11 @@ const VIEWS = [
 ];
 const MOBILE_VIEWS = VIEWS.filter((v) => v.value !== 'week');
 
-function readStoredCategories(allValues) {
+function readHiddenCategories(allValues) {
     try {
-        return parseStoredCategories(window.localStorage.getItem(STORAGE_KEY), allValues);
+        return parseHiddenCategories(window.localStorage.getItem(STORAGE_KEY), allValues);
     } catch {
-        return allValues;
+        return [];
     }
 }
 
@@ -33,18 +33,21 @@ export default function CalendarIndex({ view, date, range, today, entries }) {
     const { auth, categories } = usePage().props;
     const isMobile = useMediaQuery('(max-width: 767px)');
     const isCompact = useMediaQuery('(max-width: 1023px)');
-    const [enabled, setEnabled] = useState(() => readStoredCategories(categories.map((c) => c.value)));
+    const allCategories = useMemo(() => categories.map((c) => c.value), [categories]);
+    const [hidden, setHidden] = useState(() => readHiddenCategories(allCategories));
+    const enabled = useMemo(() => enabledCategories(hidden, allCategories), [hidden, allCategories]);
+    const setEnabled = (next) => setHidden(allCategories.filter((v) => !next.includes(v)));
     const [query, setQuery] = useState('');
     const [form, setForm] = useState(null);
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     useEffect(() => {
         try {
-            window.localStorage.setItem(STORAGE_KEY, JSON.stringify(enabled));
+            window.localStorage.setItem(STORAGE_KEY, JSON.stringify(hidden));
         } catch {
             // Storage unavailable (private mode): the filter just won't persist.
         }
-    }, [enabled]);
+    }, [hidden]);
 
     const visibleEntries = useMemo(
         () => entries.filter((e) => matchesFilter(e, { categories: enabled, query })),
