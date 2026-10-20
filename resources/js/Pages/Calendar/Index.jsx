@@ -1,3 +1,4 @@
+import MonthGrid from '@/Components/Calendar/MonthGrid';
 import Sidebar from '@/Components/Calendar/Sidebar';
 import TimeGrid from '@/Components/Calendar/TimeGrid';
 import TopBar from '@/Components/Calendar/TopBar';
@@ -80,13 +81,17 @@ export default function CalendarIndex({ view, date, range, today, entries }) {
 
                     <main className="flex min-w-0 flex-1 flex-col">
                         {view === 'month' ? (
-                            <ul className="space-y-1 overflow-y-auto p-4 text-sm">
-                                {visibleEntries.map((e) => (
-                                    <li key={e.id}>
-                                        {e.date} {e.start_time}–{e.end_time} {e.title}
-                                    </li>
-                                ))}
-                            </ul>
+                            <MonthGrid
+                                range={range}
+                                date={date}
+                                today={today}
+                                entries={visibleEntries}
+                                categories={categories}
+                                compact={false}
+                                onDayOpen={(d) => navigate({ view: 'day', date: d })}
+                                onCellCreate={(d) => setForm({ date: d, start_time: '09:00', end_time: '09:30' })}
+                                onEntryClick={setForm}
+                            />
                         ) : (
                             <TimeGrid
                                 days={eachDay(range.start, range.end)}
