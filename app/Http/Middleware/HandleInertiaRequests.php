@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\Category;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -33,6 +34,10 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
+            ],
+            'categories' => Category::options(),
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
             ],
         ];
     }
