@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<!-- Source of public/og-image.png (1200x630). Render command: see build.php. -->
+<link href="https://fonts.bunny.net/css?family=figtree:500,600,700,800&display=block" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    font-family: Figtree, ui-sans-serif, system-ui, sans-serif; color: #0f172a;
+    background: linear-gradient(135deg, #eff6ff 0%, #ffffff 55%);
+    display: flex; align-items: center; gap: 56px; padding: 0 72px;
+  }
+  .copy { flex: 1; }
+  .brand { display: flex; align-items: center; gap: 18px; margin-bottom: 36px; }
+  .brand svg { width: 72px; height: 72px; border-radius: 18px; }
+  .brand span { font-size: 40px; font-weight: 800; letter-spacing: -0.02em; }
+  h1 { font-size: 58px; line-height: 1.06; font-weight: 800; letter-spacing: -0.03em; }
+  h1 em { font-style: normal; color: #2563eb; }
+  p { margin-top: 22px; font-size: 26px; line-height: 1.4; color: #475569; font-weight: 500; }
+  .url { margin-top: 34px; font-size: 22px; font-weight: 600; color: #2563eb; }
+
+  .card {
+    width: 470px; height: 500px; flex: none; background: #fff; border: 1px solid #e2e8f0; border-radius: 24px;
+    box-shadow: 0 24px 60px -20px rgba(37, 99, 235, 0.35); padding: 20px 20px 0; overflow: hidden;
+  }
+  .days { display: grid; grid-template-columns: 44px repeat(5, 1fr); font-size: 15px; font-weight: 600; color: #64748b; text-align: center; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0; }
+  .days b { display: block; font-size: 22px; color: #0f172a; }
+  .days .today b { color: #fff; background: #2563eb; border-radius: 999px; width: 36px; height: 36px; line-height: 36px; margin: 2px auto 0; }
+  .grid { position: relative; display: grid; grid-template-columns: 44px repeat(5, 1fr); height: 440px; }
+  .hours { font-size: 13px; color: #94a3b8; }
+  .hours div { height: 56px; transform: translateY(-8px); }
+  .col { position: relative; border-left: 1px solid #f1f5f9; background: repeating-linear-gradient(#fff 0 55px, #f1f5f9 55px 56px); }
+  .e { position: absolute; left: 3px; right: 3px; border-radius: 7px; color: #fff; font-size: 12px; font-weight: 600; padding: 5px 6px; line-height: 1.2; overflow: hidden; }
+  .now { position: absolute; left: 44px; right: 0; top: 214px; height: 2px; background: #ef4444; }
+  .now::before { content: ""; position: absolute; left: -5px; top: -4px; width: 10px; height: 10px; border-radius: 999px; background: #ef4444; }
+</style>
+</head>
+<body>
+  <div class="copy">
+    <div class="brand">
+      <svg viewBox="0 0 512 512"><rect width="512" height="512" fill="#2563EB"/><g transform="translate(256 262) scale(7.4) translate(-24 -23)"><rect x="6" y="9" width="36" height="33" rx="7" fill="#fff"/><rect x="13" y="4" width="4" height="10" rx="2" fill="#fff"/><rect x="31" y="4" width="4" height="10" rx="2" fill="#fff"/><rect x="12.5" y="21.5" width="23" height="3" rx="1.5" fill="#2563EB"/><rect x="12.5" y="28.5" width="17" height="3" rx="1.5" fill="#2563EB"/><rect x="12.5" y="35.5" width="11" height="3" rx="1.5" fill="#2563EB"/></g></svg>
+      <span>Journaling</span>
+    </div>
+    <h1>Catat harimu,<br><em>jam demi jam.</em></h1>
+    <p>Jurnal aktivitas harian dalam tampilan kalender. Enak dipakai di HP.</p>
+    <div class="url">journal.dondev.id</div>
+  </div>
+
+  <div class="card">
+    <div class="days">
+      <span></span>
+      <span>Sen<b>19</b></span><span class="today">Sel<b>20</b></span><span>Rab<b>21</b></span><span>Kam<b>22</b></span><span>Jum<b>23</b></span>
+    </div>
+    <div class="grid">
+      <div class="hours"><div></div><div>08</div><div>09</div><div>10</div><div>11</div><div>12</div><div>13</div><div>14</div></div>
+      <div class="col">
+        <div class="e" style="top:6px;height:46px;background:#16A34A">Lari pagi</div>
+        <div class="e" style="top:62px;height:150px;background:#2563EB">Kerja</div>
+        <div class="e" style="top:280px;height:50px;background:#F59E0B">Makan siang</div>
+      </div>
+      <div class="col">
+        <div class="e" style="top:34px;height:100px;background:#7C3AED">Belajar</div>
+        <div class="e" style="top:146px;height:120px;background:#2563EB">Meeting</div>
+        <div class="e" style="top:284px;height:44px;background:#F59E0B">Makan</div>
+      </div>
+      <div class="col">
+        <div class="e" style="top:62px;height:200px;background:#2563EB">Kerja</div>
+        <div class="e" style="top:340px;height:70px;background:#C026D3">Ngopi</div>
+      </div>
+      <div class="col">
+        <div class="e" style="top:20px;height:60px;background:#EA580C">Perjalanan</div>
+        <div class="e" style="top:118px;height:150px;background:#2563EB">Kerja</div>
+        <div class="e" style="top:300px;height:56px;background:#0891B2">Istirahat</div>
+      </div>
+      <div class="col">
+        <div class="e" style="top:62px;height:110px;background:#2563EB">Kerja</div>
+        <div class="e" style="top:190px;height:80px;background:#E11D48">Pribadi</div>
+      </div>
+      <div class="now"></div>
+    </div>
+  </div>
+</body>
+</html>

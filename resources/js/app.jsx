@@ -23,3 +23,8 @@ createInertiaApp({
         color: '#4B5563',
     },
 });
+
+// Dev builds skip the worker so Vite's hot reload never sees a stale offline page.
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+}
