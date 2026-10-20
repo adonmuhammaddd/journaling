@@ -33,8 +33,8 @@ export default function MiniCalendar({ selected, today, highlight, onSelect }) {
 
             <div className="grid grid-cols-7 text-center text-xs">
                 {DAY_SHORT.map((d) => (
-                    <div key={d} className="py-1 font-medium text-slate-500">
-                        {d.charAt(0)}
+                    <div key={d} className="py-1 text-[11px] font-medium text-slate-500">
+                        {d}
                     </div>
                 ))}
                 {eachDay(start, end).map((day) => {

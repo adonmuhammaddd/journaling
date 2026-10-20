@@ -1,7 +1,8 @@
 import Sidebar from '@/Components/Calendar/Sidebar';
+import TimeGrid from '@/Components/Calendar/TimeGrid';
 import TopBar from '@/Components/Calendar/TopBar';
 import Toast from '@/Components/Toast';
-import { shift } from '@/lib/dates';
+import { eachDay, shift } from '@/lib/dates';
 import { matchesFilter, parseStoredCategories, STORAGE_KEY } from '@/lib/filter';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useEffect, useMemo, useState } from 'react';
@@ -24,6 +25,7 @@ export default function CalendarIndex({ view, date, range, today, entries }) {
     const { auth, categories } = usePage().props;
     const [enabled, setEnabled] = useState(() => readStoredCategories(categories.map((c) => c.value)));
     const [query, setQuery] = useState('');
+    const [form, setForm] = useState(null);
 
     useEffect(() => {
         try {
@@ -76,14 +78,25 @@ export default function CalendarIndex({ view, date, range, today, entries }) {
                         />
                     </aside>
 
-                    <main className="min-w-0 flex-1 overflow-y-auto p-4">
-                        <ul className="space-y-1 text-sm">
-                            {visibleEntries.map((e) => (
-                                <li key={e.id}>
-                                    {e.date} {e.start_time}–{e.end_time} {e.title}
-                                </li>
-                            ))}
-                        </ul>
+                    <main className="flex min-w-0 flex-1 flex-col">
+                        {view === 'month' ? (
+                            <ul className="space-y-1 overflow-y-auto p-4 text-sm">
+                                {visibleEntries.map((e) => (
+                                    <li key={e.id}>
+                                        {e.date} {e.start_time}–{e.end_time} {e.title}
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <TimeGrid
+                                days={eachDay(range.start, range.end)}
+                                entries={visibleEntries}
+                                today={today}
+                                categories={categories}
+                                onSlotClick={setForm}
+                                onEntryClick={setForm}
+                            />
+                        )}
                     </main>
                 </div>
             </div>
