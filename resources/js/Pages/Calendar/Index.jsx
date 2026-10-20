@@ -1,3 +1,4 @@
+import EntryForm from '@/Components/Calendar/EntryForm';
 import MonthGrid from '@/Components/Calendar/MonthGrid';
 import Sidebar from '@/Components/Calendar/Sidebar';
 import TimeGrid from '@/Components/Calendar/TimeGrid';
@@ -105,6 +106,14 @@ export default function CalendarIndex({ view, date, range, today, entries }) {
                     </main>
                 </div>
             </div>
+            {form && (
+                <EntryForm
+                    initial={form}
+                    categories={categories}
+                    autoFocus={!form.id}
+                    onClose={() => setForm(null)}
+                />
+            )}
             <Toast />
         </>
     );
