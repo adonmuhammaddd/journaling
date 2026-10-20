@@ -12,11 +12,17 @@ export function blockGeometry(entry) {
     };
 }
 
+const MIN_BLOCK_MINUTES = (MIN_BLOCK_HEIGHT / HOUR_HEIGHT) * 60;
+
 // Lays out one day's entries: overlapping entries form a cluster and share its width
-// in columns; touching entries (10:00 end, 10:00 start) do not overlap.
+// in columns; touching entries (10:00 end, 10:00 start) do not overlap. Overlap uses the
+// drawn end, so a short entry stretched to the minimum height is not hidden by the next one.
 export function layoutDay(entries) {
     const items = entries
-        .map((entry) => ({ entry, start: toMinutes(entry.start_time), end: toMinutes(entry.end_time) }))
+        .map((entry) => {
+            const start = toMinutes(entry.start_time);
+            return { entry, start, end: Math.max(toMinutes(entry.end_time), start + MIN_BLOCK_MINUTES) };
+        })
         .sort((a, b) => a.start - b.start || b.end - a.end);
 
     const rows = [];

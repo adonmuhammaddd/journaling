@@ -26,6 +26,10 @@ describe('layoutDay', () => {
         expect(cols(layoutDay([e(1, '09:00', '10:00'), e(2, '10:00', '11:00')]))).toEqual([[1, 0, 1], [2, 0, 1]]);
     });
 
+    it('keeps a 1-minute entry visible next to the entry right after it', () => {
+        expect(cols(layoutDay([e(1, '10:00', '10:01'), e(2, '10:01', '11:00')]))).toEqual([[1, 0, 2], [2, 1, 2]]);
+    });
+
     it('splits two overlapping entries side by side', () => {
         expect(cols(layoutDay([e(1, '09:00', '10:00'), e(2, '09:30', '10:30')]))).toEqual([[1, 0, 2], [2, 1, 2]]);
     });
