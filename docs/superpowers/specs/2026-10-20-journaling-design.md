@@ -95,7 +95,7 @@ Semua kecuali `/` di bawah middleware `auth`. Route profile bawaan Breeze tetap.
 2. Hitung rentang lewat service murni `App\Support\CalendarRange::for(view, date)`:
    - `day`: tanggal itu saja
    - `week`: Minggu sampai Sabtu yang memuat tanggal itu
-   - `month`: Minggu sebelum/tepat tanggal 1 sampai Sabtu setelah/tepat hari terakhir bulan (grid penuh, 5 atau 6 minggu)
+   - `month`: Minggu sebelum/tepat tanggal 1 sampai Sabtu setelah/tepat hari terakhir bulan (grid penuh, 4 sampai 6 minggu; Februari 2026 pas 4 minggu)
 3. Ambil entri milik `auth()->user()` dengan `date` di rentang, urut `date, start_time`.
 4. Render `Calendar/Index` dengan props: `view`, `date`, `range: {start, end}`, `today`, `entries: [{id, date, start_time, end_time, title, note, category}]` (jam sudah `HH:MM`).
 
