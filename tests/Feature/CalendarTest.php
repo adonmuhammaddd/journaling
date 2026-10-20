@@ -82,6 +82,17 @@ class CalendarTest extends TestCase
             );
     }
 
+    public function test_array_query_params_fall_back_instead_of_500(): void
+    {
+        $this->actingAs($this->user)
+            ->get('/calendar?view[]=day&date[]=2026-10-01')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('view', 'week')
+                ->where('date', '2026-10-20')
+            );
+    }
+
     public function test_default_without_query_is_week_today(): void
     {
         $this->actingAs($this->user)
