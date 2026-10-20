@@ -5,9 +5,6 @@ use App\Http\Controllers\EntryController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-// Entries resolve only within the signed-in user's own journal, so others' ids 404.
-Route::bind('entry', fn (string $value) => request()->user()->entries()->findOrFail($value));
-
 Route::get('/', function () {
     return auth()->check()
         ? redirect()->route('calendar')
