@@ -1,0 +1,13 @@
+# Dipakai kalau document root subdomain menunjuk ke folder app (bukan ke public/).
+# Semua request diteruskan ke public/, jadi .env, storage/, vendor/ tidak bisa diakses.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Pengaman kedua: tolak file/folder tersembunyi (.env, .git, dll) di root.
+    RewriteRule ^\. - [F,L]
+
+    # Redirect root to public/
+    RewriteRule ^$ public/ [L]
+    RewriteRule ((?!public/).+) public/$1 [L]
+</IfModule>
