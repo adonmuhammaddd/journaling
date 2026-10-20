@@ -59,7 +59,8 @@ Urutan untuk instalasi pertama:
 ./deploy.sh --lean-vendor
 composer install            # balikin dev deps lokal
 
-# 2. cPanel: buat subdomain, document root → <folder app>/public
+# 2. cPanel: buat subdomain, document root → <folder app>/public (disarankan)
+#    Kalau document root terlanjur ke <folder app>, .htaccess di root meneruskan semua ke public/.
 #    Buat database MySQL + user, beri ALL PRIVILEGES.
 #    Upload zip ke <folder app>, extract.
 
