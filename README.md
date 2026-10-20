@@ -33,25 +33,4 @@ npm test           # Vitest: helper tanggal, jam, layout blok, filter di resourc
 
 ## Rilis ke cPanel
 
-Setup sekali di server: clone repo ke folder aplikasi, `git checkout deploy`, `composer install --no-dev`, isi `.env`:
-
-```
-APP_ENV=production
-APP_DEBUG=false
-APP_TIMEZONE=Asia/Jakarta
-APP_LOCALE=id
-DB_CONNECTION=mysql
-DB_HOST=localhost
-DB_DATABASE=...
-DB_USERNAME=...
-DB_PASSWORD=...
-```
-
-lalu `php artisan key:generate` dan arahkan document root subdomain ke `public/`.
-
-Setiap rilis:
-
-```bash
-./release.sh          # lokal: test, build, push branch deploy
-./server-deploy.sh    # server: pull, migrate, cache
-```
+Pola sama dengan kji: `./release.sh` di lokal (test, build, push branch `deploy`) lalu `./server-deploy.sh` di server. Deploy pertama dan dependency baru lewat `./deploy.sh` (zip). Panduan lengkap, termasuk setup sekali di server: [DEPLOY.md](DEPLOY.md).

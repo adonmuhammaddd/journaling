@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 #
-# release.sh — rilis lewat git. Jalankan DI LOKAL.
+# release.sh — rilis via GIT (tanpa zip). Jalankan DI LOKAL.
 #
-# Menaruh hasil `npm run build` (public/build) ke branch `deploy` lalu push.
-# Di server cukup `./server-deploy.sh`.
+# Test dulu, lalu ambil hasil `npm run build` (public/build) ke branch `deploy` dan push.
+# Di server cukup `./server-deploy.sh` (git pull origin deploy).
+#
+# PAKAI saat TIDAK ada dependency baru (composer.json / package.json TIDAK berubah).
+# Kalau ADA dependency baru → pakai ./deploy.sh (zip), atau ./server-deploy.sh --composer
+# di server kalau composer tersedia di sana.
 #
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -11,40 +15,51 @@ cd "$(dirname "$0")"
 MAIN=main
 DEPLOY=deploy
 
+# 0. Working tree harus bersih — checkout branch gagal / bikin bingung kalau kotor.
 if [ -n "$(git status --porcelain)" ]; then
-  echo "✗ Masih ada perubahan yang belum di-commit. Rapikan dulu."
+  echo "✗ Ada perubahan yang belum di-commit. Commit atau stash dulu:"
+  git status --short
   exit 1
 fi
 
-# Node harus cukup baru untuk Vite 7.
-if command -v node >/dev/null 2>&1; then
-  NODE_MINOR="$(node -p 'process.versions.node.split(".").slice(0,2).join("")')"
-  if [ "$NODE_MINOR" -lt 2212 ] 2>/dev/null; then
-    echo "✗ Node $(node -v) terlalu tua. Jalankan 'nvm use' dulu (lihat .nvmrc)."
-    exit 1
-  fi
+if [ "$(git rev-parse --abbrev-ref HEAD)" != "$MAIN" ]; then
+  echo "✗ Jalankan dari branch '$MAIN' (sekarang: $(git rev-parse --abbrev-ref HEAD))."
+  exit 1
 fi
 
+# Vite 7 butuh Node >= 22.12 (lihat .nvmrc).
+NODE_OK="$(node -p 'const [a, b] = process.versions.node.split(".").map(Number); a > 22 || (a === 22 && b >= 12)')"
+if [ "$NODE_OK" != "true" ]; then
+  echo "✗ Node $(node -v) terlalu tua. Jalankan 'nvm use' dulu."
+  exit 1
+fi
+
+# 1. Test di main sebelum apa pun didorong.
 echo "▶ npm test …"
 npm test
-
 echo "▶ php artisan test …"
 php artisan test
 
-echo "▶ checkout $DEPLOY + merge $MAIN …"
+# 2. Branch deploy — dibuat dari main kalau belum ada (rilis pertama).
 if git show-ref --verify --quiet "refs/heads/$DEPLOY"; then
+  echo "▶ checkout $DEPLOY + merge $MAIN …"
   git checkout "$DEPLOY"
   git merge "$MAIN" --no-edit
+elif git ls-remote --exit-code --heads origin "$DEPLOY" >/dev/null 2>&1; then
+  echo "▶ ambil $DEPLOY dari origin + merge $MAIN …"
+  git checkout -b "$DEPLOY" "origin/$DEPLOY"
+  git merge "$MAIN" --no-edit
 else
-  echo "  (branch '$DEPLOY' belum ada — dibuat dari $MAIN)"
+  echo "▶ branch '$DEPLOY' belum ada — dibuat dari $MAIN …"
   git checkout -b "$DEPLOY"
 fi
 
+# 3. Build asset produksi.
 echo "▶ npm run build …"
 npm run build
 
-# public/build ada di .gitignore; di branch rilis ia wajib ikut karena server tidak punya node.
-echo "▶ commit public/build (paksa, lewati .gitignore) …"
+# 4. public/build ada di .gitignore — dipaksa masuk khusus di branch deploy.
+echo "▶ commit public/build (force, lewati .gitignore) …"
 git add -f public/build
 git commit -m "build $(date +%F-%H%M)" || echo "  (public/build tidak berubah)"
 
@@ -54,7 +69,7 @@ git push -u origin "$DEPLOY"
 echo "▶ kembali ke $MAIN …"
 git checkout "$MAIN"
 
-# Kembali ke main menghapus public/build (di sini diabaikan git, di deploy dilacak).
+# Kembali ke main menghapus public/build (di main diabaikan git, di deploy dilacak).
 echo "▶ membangun ulang aset lokal …"
 npm run build >/dev/null
 
